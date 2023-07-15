@@ -1,44 +1,92 @@
-import json
+
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
 
-class TestRedirectAccount:
-    def test_redirect_to_sauce(self):
-        o = Options()
-        o.add_experimental_option("detach", True)
-        driver = webdriver.Chrome(options=o)
-        driver.get("https://stellarburgers.nomoreparties.site/")
-        driver.find_element(By.XPATH, ".//span[contains(text(), 'Соусы')]").click()
-        list_element = driver.find_element(By.XPATH, ".//span[contains(text(), 'Соусы')]").text
-        heading_element = driver.find_element(By.XPATH, ".//h2[contains(text(), 'Соусы')]").text
-        assert list_element == heading_element  # Проверяем, что Соусы из таблицы совпадают с названием Соусов из заголовка
-        driver.quit()
+class ClickLocators:
+    sauce = [By.XPATH, ".//span[contains(text(), 'Соусы')]"]
+    bread = [By.XPATH, ".//span[contains(text(), 'Булки')]"]
+    filling = [By.XPATH, ".//span[contains(text(), 'Начинки')]"]
+
+    def __init__(self, driver):
+        self.driver = driver
 
 
-    def test_redirect_to_bread(self):
-        o = Options()
-        o.add_experimental_option("detach", True)
-        driver = webdriver.Chrome(options=o)
-        driver.get("https://stellarburgers.nomoreparties.site/")
-        driver.find_element(By.XPATH, ".//span[contains(text(), 'Соусы')]").click()
-        driver.find_element(By.XPATH, ".//span[contains(text(), 'Булки')]").click()
-        list_element = driver.find_element(By.XPATH, ".//span[contains(text(), 'Булки')]").text
-        heading_element = driver.find_element(By.XPATH, ".//h2[contains(text(), 'Булки')]").text
-        assert list_element == heading_element  # Проверяем, что булки из таблицы совпадают с названием Булок из заголовка
-        driver.quit()
+    # метод кликает по кнопке «Соусы»
+    def click_sauce_button(self):
+        self.driver.find_element(*self.sauce).click()
+        return self.driver.find_element(*self.sauce).text
 
 
+    # метод кликает по кнопке «Булки»
+    def click_bread_button(self):
+        self.driver.find_element(*self.bread).click()
+        return self.driver.find_element(*self.bread).text
 
-    def test_redirect_to_filling(self):
-        o = Options()
-        o.add_experimental_option("detach", True)
-        driver = webdriver.Chrome(options=o)
-        driver.get("https://stellarburgers.nomoreparties.site/")
-        driver.find_element(By.XPATH, ".//span[contains(text(), 'Начинки')]").click()
-        list_element = driver.find_element(By.XPATH, ".//span[contains(text(), 'Начинки')]").text
-        heading_element = driver.find_element(By.XPATH, ".//h2[contains(text(), 'Начинки')]").text
-        assert list_element == heading_element  # Проверяем, что Начинки из таблицы совпадают с названием Начинки из заголовка
+
+    # метод кликает по кнопке «Начинки»
+    def click_filling_button(self):
+        self.driver.find_element(*self.filling).click()
+        return self.driver.find_element(*self.filling).text
+
+
+class TextLocators:
+    h2_sauce = [By.XPATH, ".//h2[contains(text(), 'Соусы')]"]
+    h2_bread = [By.XPATH, ".//h2[contains(text(), 'Булки')]"]
+    h2_filling = [By.XPATH, ".//h2[contains(text(), 'Начинки')]"]
+
+    def __init__(self, driver):
+        self.driver = driver
+
+
+    def get_description_sauce(self):
+        return self.driver.find_element(*self.h2_sauce).text
+
+    def get_description_bread(self):
+        return self.driver.find_element(*self.h2_bread).text
+
+    def get_description_filling(self):
+        return self.driver.find_element(*self.h2_filling).text
+
+class TestConstructor:
+    driver = None
+
+    @classmethod
+    def setup_class(cls):
+        # создали драйвер для браузера Chrome
+        cls.driver = webdriver.Chrome()
+
+
+    def test_check_to_sauce(self):
+        self.driver.get("https://stellarburgers.nomoreparties.site/")
+        locators_click = ClickLocators(self.driver)
+        text_locator_click = locators_click.click_sauce_button()
+        text_locators = TextLocators(self.driver)
+        text_locator_h2 = text_locators.get_description_sauce()
+        assert text_locator_click == text_locator_h2  # Проверяем, что Соусы из таблицы совпадают с названием Соусов из заголовка
+
+
+    def test_check_to_bread(self):
+        self.driver.get("https://stellarburgers.nomoreparties.site/")
+        locators_click = ClickLocators(self.driver)
+        text_locator_click = locators_click.click_sauce_button()
+        text_locator_click = locators_click.click_bread_button()
+        text_locators = TextLocators(self.driver)
+        text_locator_h2 = text_locators.get_description_bread()
+        assert text_locator_click == text_locator_h2  # Проверяем, что Соусы из таблицы совпадают с названием Соусов из заголовка
+
+
+    def test_check_to_filling(self):
+        self.driver.get("https://stellarburgers.nomoreparties.site/")
+        locators_click = ClickLocators(self.driver)
+        text_locator_click = locators_click.click_filling_button()
+        text_locators = TextLocators(self.driver)
+        text_locator_h2 = text_locators.get_description_filling()
+        assert text_locator_click == text_locator_h2  # Проверяем, что Соусы из таблицы совпадают с названием Соусов из заголовка
+
+
+    @classmethod
+    def teardown_class(cls):
+        cls.driver.quit()

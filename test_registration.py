@@ -49,10 +49,11 @@ class TestRegistration:
 
         # Найти кнопку "Зарегистрироваться" и кликнуть по ней
         driver.find_element(By.XPATH, ".//button[contains(text(),'Зарегистрироваться')]").click()
-
         with open("fake_data.json", mode="w+", encoding="utf-8") as f:
             json.dump(fakeData, f, indent=4, ensure_ascii=False) # Запись в json данных аккаунта, чтобы потом их выдернуть для проверки
-
+        WebDriverWait(driver, 20).until(
+            expected_conditions.visibility_of_element_located((By.XPATH, ".//h2[contains(text(), 'Вход')]")))
+        assert driver.current_url == 'https://stellarburgers.nomoreparties.site/login'
         driver.quit()
 
 

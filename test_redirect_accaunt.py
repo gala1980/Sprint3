@@ -39,7 +39,6 @@ def redirect_to_LKK(driver, flag_tpa=False): # Создаем функцию в�
         return fdl_email, login_email
 
 
-
 class TestRedirectAccount:
     def test_to_personal_accaunt_true(self): # Проверка перехода по клику на «Личный кабинет».
         o = Options()
