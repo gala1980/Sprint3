@@ -13,18 +13,15 @@ class ClickLocators:
     def __init__(self, driver):
         self.driver = driver
 
-
     # метод кликает по кнопке «Соусы»
     def click_sauce_button(self):
         self.driver.find_element(*self.sauce).click()
         return self.driver.find_element(*self.sauce).text
 
-
     # метод кликает по кнопке «Булки»
     def click_bread_button(self):
         self.driver.find_element(*self.bread).click()
         return self.driver.find_element(*self.bread).text
-
 
     # метод кликает по кнопке «Начинки»
     def click_filling_button(self):
@@ -39,7 +36,6 @@ class TextLocators:
 
     def __init__(self, driver):
         self.driver = driver
-
 
     def get_description_sauce(self):
         return self.driver.find_element(*self.h2_sauce).text
@@ -67,7 +63,6 @@ class TestConstructor:
         text_locator_h2 = text_locators.get_description_sauce()
         assert text_locator_click == text_locator_h2  # Проверяем, что Соусы из таблицы совпадают с названием Соусов из заголовка
 
-
     def test_check_to_bread(self):
         self.driver.get("https://stellarburgers.nomoreparties.site/")
         locators_click = ClickLocators(self.driver)
@@ -76,7 +71,6 @@ class TestConstructor:
         text_locators = TextLocators(self.driver)
         text_locator_h2 = text_locators.get_description_bread()
         assert text_locator_click == text_locator_h2  # Проверяем, что Соусы из таблицы совпадают с названием Соусов из заголовка
-
 
     def test_check_to_filling(self):
         self.driver.get("https://stellarburgers.nomoreparties.site/")
