@@ -1,7 +1,5 @@
-import json
 from selenium import webdriver
 from faker import Faker
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait

@@ -1,5 +1,4 @@
 import json
-
 from selenium import webdriver
 from faker import Faker
 from selenium.webdriver.chrome.options import Options
